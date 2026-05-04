@@ -54,7 +54,7 @@
 
     .filters {
       display: grid;
-      grid-template-columns: 1.3fr 1fr 1fr 1fr;
+      grid-template-columns: 1.2fr 1.2fr 1fr 1fr;
       gap: 14px;
       margin-bottom: 22px;
     }
@@ -89,7 +89,7 @@
     }
 
     .grid { display: grid; gap: 18px; margin-bottom: 18px; }
-    .grid-6 { grid-template-columns: repeat(6, 1fr); }
+    .grid-5 { grid-template-columns: repeat(5, 1fr); }
     .grid-3 { grid-template-columns: repeat(3, 1fr); }
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
 
@@ -148,14 +148,6 @@
     .metric-box small { color: var(--muted); display: block; margin-bottom: 6px; }
     .metric-box strong { font-size: 17px; }
 
-    .alert-list { display: grid; gap: 12px; }
-    .alert { padding: 14px; border-radius: 14px; border-left: 5px solid; background: #f8fafc; }
-    .alert strong { display: block; margin-bottom: 5px; }
-    .alert p { color: var(--muted); font-size: 13px; line-height: 1.4; }
-    .alert.red { border-color: var(--red); }
-    .alert.yellow { border-color: var(--yellow); }
-    .alert.green { border-color: var(--green); }
-
     table { width: 100%; border-collapse: collapse; }
     th, td { text-align: left; padding: 13px 10px; border-bottom: 1px solid var(--border); font-size: 14px; }
     th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -165,21 +157,28 @@
     .badge.good { background: #ecfdf3; color: var(--green); }
     .badge.bad { background: #fef3f2; color: var(--red); }
     .badge.neutral { background: #eef4ff; color: var(--blue); }
+    .badge.leads { background: #fffaeb; color: var(--yellow); }
 
     .insight { display: flex; gap: 12px; padding: 14px; background: #f8fafc; border-radius: 14px; margin-bottom: 12px; }
     .insight-icon { width: 34px; height: 34px; border-radius: 10px; background: #eef4ff; color: var(--blue); display: grid; place-items: center; flex-shrink: 0; font-weight: 900; }
     .insight p { color: var(--muted); font-size: 13px; line-height: 1.45; }
 
-    .progress-wrap { margin-top: 14px; }
-    .progress-label { display: flex; justify-content: space-between; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
-    .progress-bar { height: 12px; background: #eef2f7; border-radius: 999px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--purple)); border-radius: 999px; }
+    .note {
+      background: #fffaeb;
+      border: 1px solid #fedf89;
+      color: #7a2e0e;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
 
     canvas { max-height: 260px; }
 
     @media (max-width: 1100px) {
       .filters { grid-template-columns: repeat(2, 1fr); }
-      .grid-6 { grid-template-columns: repeat(3, 1fr); }
+      .grid-5 { grid-template-columns: repeat(2, 1fr); }
       .grid-3 { grid-template-columns: 1fr; }
       .grid-2 { grid-template-columns: 1fr; }
       .span-2 { grid-column: span 1 !important; }
@@ -189,7 +188,7 @@
       body { padding: 16px; }
       .header { flex-direction: column; }
       .filters { grid-template-columns: 1fr; }
-      .grid-6 { grid-template-columns: 1fr; }
+      .grid-5 { grid-template-columns: 1fr; }
       .metric-list { grid-template-columns: 1fr; }
       .card { padding: 16px; }
       th, td { padding: 10px 6px; font-size: 12px; }
@@ -201,22 +200,28 @@
     <header class="header">
       <div>
         <h1>Dashboard Executivo de Performance</h1>
-        <p>Google Ads e Meta Ads com filtros por conta e período. Dados fictícios recalculados dinamicamente.</p>
+        <p>Google Ads e Meta Ads com filtros por plataforma, conta, objetivo e período. Preparado para dados reais via backend + Windsor.ai.</p>
       </div>
       <div class="date-pill" id="updatedAt">Atualizado hoje • 08:30</div>
     </header>
 
+    <div class="note">
+      Segurança: a chave da Windsor.ai não deve ficar neste HTML. O front deve chamar um backend próprio, e o backend consulta a Windsor usando a variável de ambiente <strong>WINDSOR_API_KEY</strong>.
+    </div>
+
     <section class="filters">
       <div class="filter-card">
-        <label for="accountSelect">Conta</label>
-        <select id="accountSelect">
-          <option value="all">Todas as contas</option>
-          <option value="brandecommerce">Brand Ecommerce</option>
-          <option value="clinicpremium">Clinic Premium</option>
-          <option value="infoproducto">InfoProduto Pro</option>
-          <option value="imobiliariaalto">Imobiliária Alto Padrão</option>
-          <option value="restorationlogistics">Restoration Logistics</option>
+        <label for="platformSelect">Plataforma</label>
+        <select id="platformSelect">
+          <option value="all">Google Ads + Meta Ads</option>
+          <option value="google">Google Ads</option>
+          <option value="meta">Meta Ads</option>
         </select>
+      </div>
+
+      <div class="filter-card">
+        <label for="accountSelect">Conta</label>
+        <select id="accountSelect"></select>
       </div>
 
       <div class="filter-card">
@@ -233,28 +238,37 @@
       </div>
 
       <div class="filter-card">
+        <label for="objectiveSelect">Objetivo</label>
+        <select id="objectiveSelect">
+          <option value="all">Ecommerce + Leads</option>
+          <option value="ecommerce">Ecommerce</option>
+          <option value="leads">Leads</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="filters" style="grid-template-columns: 1fr 1fr;">
+      <div class="filter-card">
         <label for="startDate">Data inicial</label>
         <input type="date" id="startDate" value="2026-04-28" />
       </div>
-
       <div class="filter-card">
         <label for="endDate">Data final</label>
         <input type="date" id="endDate" value="2026-05-04" />
       </div>
     </section>
 
-    <section class="grid grid-6">
+    <section class="grid grid-5">
       <div class="card kpi-card"><div class="kpi-label">Investimento</div><div class="kpi-value" id="kpiSpend">-</div><span class="trend up" id="trendSpend">-</span></div>
-      <div class="card kpi-card"><div class="kpi-label">Receita Atribuída</div><div class="kpi-value" id="kpiRevenue">-</div><span class="trend up" id="trendRevenue">-</span></div>
+      <div class="card kpi-card"><div class="kpi-label">Receita / Valor Conv.</div><div class="kpi-value" id="kpiRevenue">-</div><span class="trend up" id="trendRevenue">-</span></div>
       <div class="card kpi-card"><div class="kpi-label">ROAS Geral</div><div class="kpi-value" id="kpiRoas">-</div><span class="trend up" id="trendRoas">-</span></div>
-      <div class="card kpi-card"><div class="kpi-label">CPA Médio</div><div class="kpi-value" id="kpiCpa">-</div><span class="trend down" id="trendCpa">-</span></div>
+      <div class="card kpi-card"><div class="kpi-label">CPA / CPL Médio</div><div class="kpi-value" id="kpiCpa">-</div><span class="trend down" id="trendCpa">-</span></div>
       <div class="card kpi-card"><div class="kpi-label">Conversões</div><div class="kpi-value" id="kpiConversions">-</div><span class="trend up" id="trendConversions">-</span></div>
-      <div class="card kpi-card"><div class="kpi-label">Budget Usado</div><div class="kpi-value" id="kpiBudget">-</div><span class="trend warn" id="trendBudget">-</span></div>
     </section>
 
     <section class="grid grid-2">
       <div class="card">
-        <div class="section-title"><h2>Performance por Canal</h2><span id="channelSubtitle">Período selecionado</span></div>
+        <div class="section-title"><h2>Performance por Plataforma</h2><span id="channelSubtitle">Período selecionado</span></div>
         <div class="grid grid-2" style="margin-bottom:0;">
           <div>
             <div class="channel-name"><span class="dot google"></span> Google Ads</div>
@@ -262,7 +276,7 @@
               <div class="metric-box"><small>Spend</small><strong id="googleSpend">-</strong></div>
               <div class="metric-box"><small>ROAS</small><strong id="googleRoas">-</strong></div>
               <div class="metric-box"><small>Conversões</small><strong id="googleConv">-</strong></div>
-              <div class="metric-box"><small>CPA</small><strong id="googleCpa">-</strong></div>
+              <div class="metric-box"><small>CPA/CPL</small><strong id="googleCpa">-</strong></div>
             </div>
           </div>
           <div>
@@ -271,61 +285,37 @@
               <div class="metric-box"><small>Spend</small><strong id="metaSpend">-</strong></div>
               <div class="metric-box"><small>ROAS</small><strong id="metaRoas">-</strong></div>
               <div class="metric-box"><small>Conversões</small><strong id="metaConv">-</strong></div>
-              <div class="metric-box"><small>CPA</small><strong id="metaCpa">-</strong></div>
+              <div class="metric-box"><small>CPA/CPL</small><strong id="metaCpa">-</strong></div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="card">
-        <div class="section-title"><h2>Budget & Pacing</h2><span id="budgetSubtitle">Período selecionado</span></div>
-        <div class="metric-list">
-          <div class="metric-box"><small>Budget Planejado</small><strong id="budgetPlanned">-</strong></div>
-          <div class="metric-box"><small>Gasto Real</small><strong id="budgetSpent">-</strong></div>
-          <div class="metric-box"><small>Ideal no Período</small><strong id="budgetIdeal">-</strong></div>
-          <div class="metric-box"><small>Projeção Mensal</small><strong id="budgetProjection">-</strong></div>
-        </div>
-        <div class="progress-wrap">
-          <div class="progress-label"><span>Consumo do budget</span><strong id="budgetPercentText">-</strong></div>
-          <div class="progress-bar"><div class="progress-fill" id="budgetBar" style="width:0%;"></div></div>
-        </div>
+        <div class="section-title"><h2>Ecommerce vs Leads</h2><span>Distribuição do investimento</span></div>
+        <canvas id="objectiveChart"></canvas>
       </div>
     </section>
 
     <section class="grid grid-2">
       <div class="card">
-        <div class="section-title"><h2>Evolução do Período</h2><span>Spend x Receita</span></div>
+        <div class="section-title"><h2>Evolução do Período</h2><span>Spend x Valor de conversão</span></div>
         <canvas id="lineChart"></canvas>
       </div>
       <div class="card">
-        <div class="section-title"><h2>Distribuição de Conversões</h2><span>Por canal</span></div>
+        <div class="section-title"><h2>Distribuição de Conversões</h2><span>Por plataforma</span></div>
         <canvas id="donutChart"></canvas>
       </div>
     </section>
 
     <section class="grid grid-3">
-      <div class="card">
-        <div class="section-title"><h2>Alertas Executivos</h2><span id="alertSubtitle">Prioridade alta</span></div>
-        <div class="alert-list" id="alerts"></div>
-      </div>
-
       <div class="card span-2" style="grid-column: span 2;">
-        <div class="section-title"><h2>Performance por Campanha</h2><span>Top campanhas</span></div>
+        <div class="section-title"><h2>Performance por Conta</h2><span>Google Ads e Meta Ads</span></div>
         <table>
           <thead>
-            <tr><th>Campanha</th><th>Conta</th><th>Canal</th><th>Spend</th><th>Conv.</th><th>CPA</th><th>ROAS</th><th>Status</th></tr>
+            <tr><th>Conta</th><th>Plataforma</th><th>Objetivo</th><th>Spend</th><th>Conv.</th><th>CPA/CPL</th><th>Valor Conv.</th><th>ROAS</th></tr>
           </thead>
-          <tbody id="campaignRows"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="grid grid-2">
-      <div class="card">
-        <div class="section-title"><h2>Funil do Período</h2><span>Cliques até conversão</span></div>
-        <table>
-          <thead><tr><th>Etapa</th><th>Volume</th><th>Taxa</th><th>Variação</th></tr></thead>
-          <tbody id="funnelRows"></tbody>
+          <tbody id="accountRows"></tbody>
         </table>
       </div>
 
@@ -334,39 +324,73 @@
         <div id="insights"></div>
       </div>
     </section>
+
+    <section class="grid grid-2">
+      <div class="card">
+        <div class="section-title"><h2>Performance por Campanha</h2><span>Top campanhas</span></div>
+        <table>
+          <thead>
+            <tr><th>Campanha</th><th>Conta</th><th>Canal</th><th>Spend</th><th>Conv.</th><th>CPA/CPL</th><th>ROAS</th></tr>
+          </thead>
+          <tbody id="campaignRows"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><h2>Funil do Período</h2><span>Cliques até conversão</span></div>
+        <table>
+          <thead><tr><th>Etapa</th><th>Volume</th><th>Taxa</th><th>Variação</th></tr></thead>
+          <tbody id="funnelRows"></tbody>
+        </table>
+      </div>
+    </section>
   </main>
 
   <script>
-    const accounts = {
-      brandecommerce: { name: 'Brand Ecommerce', monthlyBudget: 320000, scale: 1.25, roasBias: 5.4 },
-      clinicpremium: { name: 'Clinic Premium', monthlyBudget: 140000, scale: 0.72, roasBias: 3.8 },
-      infoproducto: { name: 'InfoProduto Pro', monthlyBudget: 210000, scale: 1.05, roasBias: 4.7 },
-      imobiliariaalto: { name: 'Imobiliária Alto Padrão', monthlyBudget: 180000, scale: 0.9, roasBias: 6.2 },
-      restorationlogistics: { name: 'Restoration Logistics', monthlyBudget: 95000, scale: 0.58, roasBias: 3.2 }
-    };
+    const accounts = [
+      { id: 'google-zion-joias', platform: 'google', platformLabel: 'Google Ads', name: 'The Zion Joias', objective: 'ecommerce', objectiveLabel: 'Ecommerce', scale: 1.15, roasBias: 5.6 },
+      { id: 'google-blanks-co', platform: 'google', platformLabel: 'Google Ads', name: 'Blanks Co', objective: 'ecommerce', objectiveLabel: 'Ecommerce', scale: 1.05, roasBias: 4.9 },
+      { id: 'google-asteri-forneria', platform: 'google', platformLabel: 'Google Ads', name: 'Astéri Forneria', objective: 'leads', objectiveLabel: 'Leads', scale: 0.72, roasBias: 2.8 },
+      { id: 'google-concreserv', platform: 'google', platformLabel: 'Google Ads', name: '11/02 - Concreserv [SQUAD][CKT] - Pedro Henrique', objective: 'leads', objectiveLabel: 'Leads', scale: 0.84, roasBias: 3.1 },
+      { id: 'google-gaeel', platform: 'google', platformLabel: 'Google Ads', name: 'Gaeel Impermeabilizações', objective: 'leads', objectiveLabel: 'Leads', scale: 0.62, roasBias: 2.9 },
+      { id: 'meta-asteri-forneria', platform: 'meta', platformLabel: 'Meta Ads', name: 'CA01 - Astéri Forneria', objective: 'leads', objectiveLabel: 'Leads', scale: 0.68, roasBias: 2.5 },
+      { id: 'meta-concreserv', platform: 'meta', platformLabel: 'Meta Ads', name: 'Concreserv', objective: 'leads', objectiveLabel: 'Leads', scale: 0.78, roasBias: 2.7 },
+      { id: 'meta-gaeel', platform: 'meta', platformLabel: 'Meta Ads', name: 'Gaeel Impermeabilizações', objective: 'leads', objectiveLabel: 'Leads', scale: 0.58, roasBias: 2.6 },
+      { id: 'meta-zion-joias', platform: 'meta', platformLabel: 'Meta Ads', name: 'ZION JOIAS | CA', objective: 'ecommerce', objectiveLabel: 'Ecommerce', scale: 1.08, roasBias: 4.5 },
+      { id: 'meta-blanks-co', platform: 'meta', platformLabel: 'Meta Ads', name: 'Blanks Co.', objective: 'ecommerce', objectiveLabel: 'Ecommerce', scale: 0.98, roasBias: 4.1 }
+    ];
 
     const periodDays = { today: 1, yesterday: 1, '7d': 7, '14d': 14, '30d': 30, mtd: 4, custom: 7 };
     let lineChart;
     let donutChart;
+    let objectiveChart;
 
     const brl = value => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
     const num = value => value.toLocaleString('pt-BR');
-    const pct = value => `${value.toFixed(0)}%`;
 
-    function getSelectedAccounts() {
-      const selected = document.getElementById('accountSelect').value;
-      if (selected === 'all') return Object.values(accounts);
-      return [accounts[selected]];
+    function populateAccountSelect() {
+      const platform = document.getElementById('platformSelect').value;
+      const objective = document.getElementById('objectiveSelect').value;
+      const select = document.getElementById('accountSelect');
+      const filtered = accounts.filter(account => {
+        const platformOk = platform === 'all' || account.platform === platform;
+        const objectiveOk = objective === 'all' || account.objective === objective;
+        return platformOk && objectiveOk;
+      });
+
+      select.innerHTML = '<option value="all">Todas as contas filtradas</option>' + filtered.map(account => `<option value="${account.id}">${account.platformLabel} | ${account.name}</option>`).join('');
     }
 
-    function getPeriodLabel() {
-      const period = document.getElementById('periodSelect').value;
-      const start = document.getElementById('startDate').value.split('-').reverse().join('/');
-      const end = document.getElementById('endDate').value.split('-').reverse().join('/');
-      const labels = {
-        today: 'Hoje', yesterday: 'Ontem', '7d': 'Últimos 7 dias', '14d': 'Últimos 14 dias', '30d': 'Últimos 30 dias', mtd: 'Mês atual', custom: `${start} até ${end}`
-      };
-      return labels[period];
+    function getFilteredAccounts() {
+      const platform = document.getElementById('platformSelect').value;
+      const objective = document.getElementById('objectiveSelect').value;
+      const selectedAccount = document.getElementById('accountSelect').value;
+      return accounts.filter(account => {
+        const platformOk = platform === 'all' || account.platform === platform;
+        const objectiveOk = objective === 'all' || account.objective === objective;
+        const accountOk = selectedAccount === 'all' || account.id === selectedAccount;
+        return platformOk && objectiveOk && accountOk;
+      });
     }
 
     function daysBetweenDates() {
@@ -380,126 +404,184 @@
       return period === 'custom' ? daysBetweenDates() : periodDays[period];
     }
 
-    function buildData() {
-      const selectedAccounts = getSelectedAccounts();
+    function getPeriodLabel() {
+      const period = document.getElementById('periodSelect').value;
+      const start = document.getElementById('startDate').value.split('-').reverse().join('/');
+      const end = document.getElementById('endDate').value.split('-').reverse().join('/');
+      const labels = {
+        today: 'Hoje', yesterday: 'Ontem', '7d': 'Últimos 7 dias', '14d': 'Últimos 14 dias', '30d': 'Últimos 30 dias', mtd: 'Mês atual', custom: `${start} até ${end}`
+      };
+      return labels[period];
+    }
+
+    function simulateAccountData(account, days) {
+      const baseSpend = account.platform === 'google' ? 1900 : 1450;
+      const leadMultiplier = account.objective === 'leads' ? 0.72 : 1;
+      const spend = Math.round(baseSpend * days * account.scale * leadMultiplier);
+      const conversions = Math.max(1, Math.round(spend / (account.objective === 'ecommerce' ? 48 / account.roasBias : 37 / (account.roasBias / 2.7))));
+      const conversionValue = account.objective === 'ecommerce' ? Math.round(spend * account.roasBias) : Math.round(conversions * 220);
+      const roas = +(conversionValue / spend).toFixed(2);
+      return { ...account, spend, conversions, conversionValue, roas, cpa: spend / conversions };
+    }
+
+    async function fetchWindsorData() {
+      /*
+        Integração real recomendada:
+
+        const response = await fetch('/api/windsor-ads-performance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            platform: document.getElementById('platformSelect').value,
+            account: document.getElementById('accountSelect').value,
+            objective: document.getElementById('objectiveSelect').value,
+            period: document.getElementById('periodSelect').value,
+            date_from: document.getElementById('startDate').value,
+            date_to: document.getElementById('endDate').value
+          })
+        });
+
+        return await response.json();
+
+        O endpoint backend deve consultar a Windsor.ai usando process.env.WINDSOR_API_KEY.
+        Não coloque a API key no HTML.
+      */
       const days = getDays();
-      const scale = selectedAccounts.reduce((sum, account) => sum + account.scale, 0);
-      const monthlyBudget = selectedAccounts.reduce((sum, account) => sum + account.monthlyBudget, 0);
-      const roasBias = selectedAccounts.reduce((sum, account) => sum + account.roasBias, 0) / selectedAccounts.length;
+      return getFilteredAccounts().map(account => simulateAccountData(account, days));
+    }
 
-      const spend = Math.round(18500 * days * scale * (0.92 + days * 0.005));
-      const conversions = Math.round(430 * days * scale * (0.9 + roasBias / 20));
-      const roas = +(roasBias * (0.94 + days / 180)).toFixed(2);
-      const revenue = Math.round(spend * roas);
-      const cpa = spend / conversions;
-      const googleShare = Math.min(0.72, Math.max(0.48, 0.56 + (roasBias - 4.5) / 20));
-      const googleSpend = Math.round(spend * googleShare);
-      const metaSpend = spend - googleSpend;
-      const googleConv = Math.round(conversions * (googleShare + 0.06));
-      const metaConv = conversions - googleConv;
-      const googleRoas = +(roas * 1.16).toFixed(2);
-      const metaRoas = +(roas * 0.78).toFixed(2);
-      const budgetUsed = Math.round((spend / monthlyBudget) * 100);
-      const projected = Math.round((spend / days) * 30);
-      const ideal = Math.round((days / 30) * 100);
-
-      return { selectedAccounts, days, monthlyBudget, spend, conversions, roas, revenue, cpa, googleSpend, metaSpend, googleConv, metaConv, googleRoas, metaRoas, budgetUsed, projected, ideal };
+    function aggregate(rows) {
+      const spend = rows.reduce((sum, row) => sum + row.spend, 0);
+      const conversions = rows.reduce((sum, row) => sum + row.conversions, 0);
+      const conversionValue = rows.reduce((sum, row) => sum + row.conversionValue, 0);
+      return {
+        spend,
+        conversions,
+        conversionValue,
+        roas: spend ? +(conversionValue / spend).toFixed(2) : 0,
+        cpa: conversions ? spend / conversions : 0,
+        google: rows.filter(row => row.platform === 'google'),
+        meta: rows.filter(row => row.platform === 'meta'),
+        ecommerce: rows.filter(row => row.objective === 'ecommerce'),
+        leads: rows.filter(row => row.objective === 'leads')
+      };
     }
 
     function renderKpis(data) {
       document.getElementById('kpiSpend').textContent = brl(data.spend);
-      document.getElementById('kpiRevenue').textContent = brl(data.revenue);
+      document.getElementById('kpiRevenue').textContent = brl(data.conversionValue);
       document.getElementById('kpiRoas').textContent = `${data.roas}x`;
       document.getElementById('kpiCpa').textContent = brl(data.cpa);
       document.getElementById('kpiConversions').textContent = num(data.conversions);
-      document.getElementById('kpiBudget').textContent = pct(data.budgetUsed);
       document.getElementById('trendSpend').textContent = '▲ 8,4% vs período anterior';
       document.getElementById('trendRevenue').textContent = '▲ 14,2% vs período anterior';
       document.getElementById('trendRoas').textContent = '▲ 0,38 pts';
       document.getElementById('trendCpa').textContent = '▼ 6,1% melhor';
       document.getElementById('trendConversions').textContent = '▲ 11,7%';
-      document.getElementById('trendBudget').textContent = data.budgetUsed > data.ideal + 8 ? '⚠ acima do ritmo ideal' : 'dentro do ritmo esperado';
+    }
+
+    function summarize(rows) {
+      return aggregate(rows);
     }
 
     function renderChannel(data) {
+      const google = summarize(data.google);
+      const meta = summarize(data.meta);
       document.getElementById('channelSubtitle').textContent = getPeriodLabel();
-      document.getElementById('googleSpend').textContent = brl(data.googleSpend);
-      document.getElementById('googleRoas').textContent = `${data.googleRoas}x`;
-      document.getElementById('googleConv').textContent = num(data.googleConv);
-      document.getElementById('googleCpa').textContent = brl(data.googleSpend / data.googleConv);
-      document.getElementById('metaSpend').textContent = brl(data.metaSpend);
-      document.getElementById('metaRoas').textContent = `${data.metaRoas}x`;
-      document.getElementById('metaConv').textContent = num(data.metaConv);
-      document.getElementById('metaCpa').textContent = brl(data.metaSpend / data.metaConv);
+      document.getElementById('googleSpend').textContent = brl(google.spend);
+      document.getElementById('googleRoas').textContent = `${google.roas}x`;
+      document.getElementById('googleConv').textContent = num(google.conversions);
+      document.getElementById('googleCpa').textContent = brl(google.cpa || 0);
+      document.getElementById('metaSpend').textContent = brl(meta.spend);
+      document.getElementById('metaRoas').textContent = `${meta.roas}x`;
+      document.getElementById('metaConv').textContent = num(meta.conversions);
+      document.getElementById('metaCpa').textContent = brl(meta.cpa || 0);
     }
 
-    function renderBudget(data) {
-      document.getElementById('budgetSubtitle').textContent = getPeriodLabel();
-      document.getElementById('budgetPlanned').textContent = brl(data.monthlyBudget);
-      document.getElementById('budgetSpent').textContent = brl(data.spend);
-      document.getElementById('budgetIdeal').textContent = pct(data.ideal);
-      document.getElementById('budgetProjection').textContent = brl(data.projected);
-      document.getElementById('budgetPercentText').textContent = pct(data.budgetUsed);
-      document.getElementById('budgetBar').style.width = `${Math.min(data.budgetUsed, 100)}%`;
-    }
-
-    function renderCharts(data) {
-      const labels = Array.from({ length: data.days }, (_, i) => `D${i + 1}`);
-      const spendSeries = labels.map((_, i) => Math.round((data.spend / data.days) * (0.82 + ((i % 5) * 0.08))));
-      const revenueSeries = spendSeries.map((value, i) => Math.round(value * data.roas * (0.86 + ((i % 4) * 0.07))));
+    function renderCharts(rows, data) {
+      const days = getDays();
+      const labels = Array.from({ length: days }, (_, i) => `D${i + 1}`);
+      const spendSeries = labels.map((_, i) => Math.round((data.spend / days) * (0.82 + ((i % 5) * 0.08))));
+      const valueSeries = spendSeries.map((value, i) => Math.round(value * data.roas * (0.86 + ((i % 4) * 0.07))));
 
       if (lineChart) lineChart.destroy();
       lineChart = new Chart(document.getElementById('lineChart'), {
         type: 'line',
         data: { labels, datasets: [
           { label: 'Investimento', data: spendSeries, tension: 0.4, borderWidth: 3 },
-          { label: 'Receita', data: revenueSeries, tension: 0.4, borderWidth: 3 }
+          { label: 'Valor de conversão', data: valueSeries, tension: 0.4, borderWidth: 3 }
         ]},
         options: { responsive: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { ticks: { callback: value => 'R$ ' + value.toLocaleString('pt-BR') } } } }
       });
 
+      const google = summarize(data.google);
+      const meta = summarize(data.meta);
       if (donutChart) donutChart.destroy();
       donutChart = new Chart(document.getElementById('donutChart'), {
         type: 'doughnut',
-        data: { labels: ['Google Ads', 'Meta Ads'], datasets: [{ data: [data.googleConv, data.metaConv], borderWidth: 0 }] },
+        data: { labels: ['Google Ads', 'Meta Ads'], datasets: [{ data: [google.conversions, meta.conversions], borderWidth: 0 }] },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '68%' }
+      });
+
+      const ecommerce = summarize(data.ecommerce);
+      const leads = summarize(data.leads);
+      if (objectiveChart) objectiveChart.destroy();
+      objectiveChart = new Chart(document.getElementById('objectiveChart'), {
+        type: 'doughnut',
+        data: { labels: ['Ecommerce', 'Leads'], datasets: [{ data: [ecommerce.spend, leads.spend], borderWidth: 0 }] },
         options: { responsive: true, plugins: { legend: { position: 'bottom' } }, cutout: '68%' }
       });
     }
 
-    function renderCampaigns(data) {
-      const selectedNames = data.selectedAccounts.map(account => account.name);
-      const campaignTemplates = [
-        ['Search | High Intent', 'Google', 0.18, 0.23, 1.35, 'Escalar', 'good'],
-        ['Performance Max | Produtos', 'Google', 0.24, 0.19, 0.95, 'Manter', 'neutral'],
-        ['Meta | Advantage+ Vendas', 'Meta', 0.21, 0.26, 0.90, 'Escalar', 'good'],
-        ['Meta | Remarketing 30D', 'Meta', 0.11, 0.08, 0.55, 'Revisar', 'bad'],
-        ['Shopping | Genérico', 'Google', 0.14, 0.10, 0.72, 'Otimizar', 'bad'],
-        ['Lead Ads | Broad', 'Meta', 0.12, 0.14, 0.82, 'Manter', 'neutral']
-      ];
-
-      document.getElementById('campaignRows').innerHTML = campaignTemplates.map((row, index) => {
-        const [campaign, channel, spendShare, convShare, roasMultiplier, status, badge] = row;
-        const spend = Math.round(data.spend * spendShare);
-        const conv = Math.max(1, Math.round(data.conversions * convShare));
-        const cpa = spend / conv;
-        const roas = +(data.roas * roasMultiplier).toFixed(1);
-        const account = selectedNames[index % selectedNames.length];
-        return `<tr><td>${campaign}</td><td>${account}</td><td>${channel}</td><td>${brl(spend)}</td><td>${num(conv)}</td><td>${brl(cpa)}</td><td>${roas}x</td><td><span class="badge ${badge}">${status}</span></td></tr>`;
-      }).join('');
+    function renderAccountRows(rows) {
+      document.getElementById('accountRows').innerHTML = rows.map(row => `
+        <tr>
+          <td>${row.name}</td>
+          <td>${row.platformLabel}</td>
+          <td><span class="badge ${row.objective === 'ecommerce' ? 'neutral' : 'leads'}">${row.objectiveLabel}</span></td>
+          <td>${brl(row.spend)}</td>
+          <td>${num(row.conversions)}</td>
+          <td>${brl(row.cpa)}</td>
+          <td>${brl(row.conversionValue)}</td>
+          <td>${row.roas}x</td>
+        </tr>
+      `).join('');
     }
 
-    function renderAlertsAndInsights(data) {
-      const accountLabel = document.getElementById('accountSelect').value === 'all' ? 'contas selecionadas' : data.selectedAccounts[0].name;
-      document.getElementById('alerts').innerHTML = `
-        <div class="alert red"><strong>Fadiga em remarketing</strong><p>Meta Remarketing apresenta frequência estimada acima de 5 e CPA 27% maior que a média do período.</p></div>
-        <div class="alert yellow"><strong>Pacing precisa de atenção</strong><p>Budget usado em ${accountLabel}: ${pct(data.budgetUsed)} vs ideal de ${pct(data.ideal)} para o período.</p></div>
-        <div class="alert green"><strong>Google Search eficiente</strong><p>Campanhas de intenção seguem como principal motor de receita, com ROAS acima da média consolidada.</p></div>
-      `;
+    function renderCampaigns(rows) {
+      const templates = ['Search | Alta Intenção', 'Performance Max', 'Meta | Advantage+', 'Remarketing', 'Conversões | Broad', 'Brand'];
+      const campaignRows = rows.slice(0, 8).map((row, index) => {
+        const spend = Math.round(row.spend * (0.34 + (index % 3) * 0.08));
+        const conversions = Math.max(1, Math.round(row.conversions * (0.28 + (index % 4) * 0.05)));
+        const roas = +(row.roas * (0.82 + (index % 3) * 0.15)).toFixed(2);
+        return {
+          campaign: templates[index % templates.length],
+          account: row.name,
+          platform: row.platformLabel,
+          spend,
+          conversions,
+          cpa: spend / conversions,
+          roas
+        };
+      });
+
+      document.getElementById('campaignRows').innerHTML = campaignRows.map(row => `
+        <tr><td>${row.campaign}</td><td>${row.account}</td><td>${row.platform}</td><td>${brl(row.spend)}</td><td>${num(row.conversions)}</td><td>${brl(row.cpa)}</td><td>${row.roas}x</td></tr>
+      `).join('');
+    }
+
+    function renderInsights(rows, data) {
+      const best = [...rows].sort((a, b) => b.roas - a.roas)[0];
+      const worstCpa = [...rows].sort((a, b) => b.cpa - a.cpa)[0];
+      const google = summarize(data.google);
+      const meta = summarize(data.meta);
+      const dominant = google.spend >= meta.spend ? 'Google Ads' : 'Meta Ads';
 
       document.getElementById('insights').innerHTML = `
-        <div class="insight"><div class="insight-icon">1</div><div><strong>Período analisado: ${getPeriodLabel()}.</strong><p>O dashboard deve permitir alternar entre visão diária, semanal, mensal e intervalo personalizado para evitar decisões baseadas em amostras pequenas.</p></div></div>
-        <div class="insight"><div class="insight-icon">2</div><div><strong>Visão multi-conta.</strong><p>A leitura consolidada mostra ${data.selectedAccounts.length} conta(s), mas a seleção individual permite encontrar rapidamente onde está o problema ou oportunidade.</p></div></div>
-        <div class="insight"><div class="insight-icon">3</div><div><strong>Próxima ação sugerida.</strong><p>Escalar campanhas com ROAS acima de ${data.roas.toFixed(1)}x e revisar campanhas com CPA acima de ${brl(data.cpa * 1.35)}.</p></div></div>
+        <div class="insight"><div class="insight-icon">1</div><div><strong>Período: ${getPeriodLabel()}.</strong><p>A visão está filtrando ${rows.length} conta(s), com investimento total de ${brl(data.spend)} e ${num(data.conversions)} conversões.</p></div></div>
+        <div class="insight"><div class="insight-icon">2</div><div><strong>Melhor eficiência: ${best ? best.name : '-'}.</strong><p>Conta com maior ROAS/valor relativo no filtro atual: ${best ? best.roas + 'x' : '-'}.</p></div></div>
+        <div class="insight"><div class="insight-icon">3</div><div><strong>Canal dominante: ${dominant}.</strong><p>Compare CPA/CPL e volume antes de redistribuir verba entre plataformas.</p></div></div>
+        <div class="insight"><div class="insight-icon">4</div><div><strong>Atenção a CPA/CPL alto.</strong><p>${worstCpa ? worstCpa.name : '-'} tem o maior custo por conversão no recorte atual.</p></div></div>
       `;
     }
 
@@ -512,22 +594,25 @@
         <tr><td>Impressões</td><td>${num(impressions)}</td><td>-</td><td><span class="trend up">▲ 9%</span></td></tr>
         <tr><td>Cliques</td><td>${num(clicks)}</td><td>2,9%</td><td><span class="trend up">▲ 4%</span></td></tr>
         <tr><td>Leads/Carrinhos</td><td>${num(leads)}</td><td>5,4%</td><td><span class="trend down">▼ 3%</span></td></tr>
-        <tr><td>Conversões</td><td>${num(conversions)}</td><td>${((conversions / leads) * 100).toFixed(1)}%</td><td><span class="trend up">▲ 12%</span></td></tr>
+        <tr><td>Conversões</td><td>${num(conversions)}</td><td>${leads ? ((conversions / leads) * 100).toFixed(1) : 0}%</td><td><span class="trend up">▲ 12%</span></td></tr>
       `;
     }
 
-    function updateDashboard() {
-      const data = buildData();
+    async function updateDashboard() {
+      const rows = await fetchWindsorData();
+      const data = aggregate(rows);
       document.getElementById('updatedAt').textContent = `Atualizado hoje • ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
       renderKpis(data);
       renderChannel(data);
-      renderBudget(data);
-      renderCharts(data);
-      renderCampaigns(data);
-      renderAlertsAndInsights(data);
+      renderCharts(rows, data);
+      renderAccountRows(rows);
+      renderCampaigns(rows);
+      renderInsights(rows, data);
       renderFunnel(data);
     }
 
+    document.getElementById('platformSelect').addEventListener('change', () => { populateAccountSelect(); updateDashboard(); });
+    document.getElementById('objectiveSelect').addEventListener('change', () => { populateAccountSelect(); updateDashboard(); });
     document.getElementById('accountSelect').addEventListener('change', updateDashboard);
     document.getElementById('periodSelect').addEventListener('change', function () {
       const isCustom = this.value === 'custom';
@@ -540,6 +625,7 @@
 
     document.getElementById('startDate').disabled = true;
     document.getElementById('endDate').disabled = true;
+    populateAccountSelect();
     updateDashboard();
   </script>
 </body>
